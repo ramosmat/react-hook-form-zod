@@ -6,6 +6,7 @@ import { ErrorMessage } from '@hookform/error-message';
 import { zodResolver } from '@hookform/resolvers/zod';
 import type { UserRegister } from '../schema';
 import { userRegisterSchema } from '../schema';
+import toast from 'react-hot-toast';
 
 export default function FormZod() {
   const [passwordVisible, setPasswordVisible] = React.useState(false);
@@ -60,9 +61,12 @@ export default function FormZod() {
           message: resData.errors[field],
         });
       }
+      toast.error('Erro ao cadastrar usuário');
     } else {
       console.log(response);
       console.log(resData);
+
+      toast.success('Usuário cadastrado com sucesso');
     }
   }
 
