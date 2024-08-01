@@ -1,3 +1,6 @@
+// ESTE COMPONENTE FOI CONTRUIDO UTILIZANDO ZOD
+// ESTÁ SENDO USADO NA VERSÃO FINAL
+
 import React from 'react';
 import { EyeIcon, EyeOffIcon, Loader } from 'lucide-react';
 import { useHookFormMask } from 'use-mask-input';
@@ -16,6 +19,7 @@ export default function FormZod() {
     register,
     setValue,
     setError,
+    reset,
     formState: { isSubmitting, errors },
   } = useForm<UserRegister>({ resolver: zodResolver(userRegisterSchema) });
 
@@ -67,6 +71,7 @@ export default function FormZod() {
       console.log(resData);
 
       toast.success('Usuário cadastrado com sucesso');
+      reset();
     }
   }
 

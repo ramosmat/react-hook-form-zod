@@ -1,3 +1,6 @@
+// ESTE COMPONENTE FOI CONSTRUIDO SEM USO DO ZOD
+// NÃO ESTÁ SENDO USADO NA VERSÃO FINAL
+
 import React from 'react';
 import { EyeIcon, EyeOffIcon, Loader } from 'lucide-react';
 import { useHookFormMask } from 'use-mask-input';
