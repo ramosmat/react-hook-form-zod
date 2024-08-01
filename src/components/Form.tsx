@@ -1,7 +1,14 @@
+import { useState } from 'react';
 import { EyeIcon } from 'lucide-react';
-// import { EyeOffIcon } from 'lucide-react';
+import { EyeOffIcon } from 'lucide-react';
 
 export default function Form() {
+  const [passwordVisible, setPasswordVisible] = useState(false);
+
+  function handlePasswordVisibility() {
+    setPasswordVisible(!passwordVisible);
+  }
+
   return (
     <form>
       <div className="mb-4">
@@ -19,26 +26,39 @@ export default function Form() {
       <div className="mb-4">
         <label htmlFor="password">Senha</label>
         <div className="relative">
-          <input type="password" id="password" />
+          <input type={passwordVisible ? 'text' : 'password'} id="password" />
           <span className="absolute right-3 top-3">
-            <EyeIcon size={20} className="text-slate-600 cursor-pointer" />
-            {/* <EyeOffIcon
-                      className="text-slate-600 cursor-pointer"
-                      size={20}
-                    /> */}
+            <button type="button" onClick={handlePasswordVisibility}>
+              {passwordVisible ? (
+                <EyeOffIcon
+                  className="text-slate-600 cursor-pointer"
+                  size={20}
+                />
+              ) : (
+                <EyeIcon size={20} className="text-slate-600 cursor-pointer" />
+              )}
+            </button>
           </span>
         </div>
       </div>
       <div className="mb-4">
         <label htmlFor="confirm-password">Confirmar Senha</label>
         <div className="relative">
-          <input type="password" id="confirm-password" />
+          <input
+            type={passwordVisible ? 'text' : 'password'}
+            id="confirm-password"
+          />
           <span className="absolute right-3 top-3">
-            <EyeIcon size={20} className="text-slate-600 cursor-pointer" />
-            {/* <EyeOffIcon
+            <button type="button" onClick={handlePasswordVisibility}>
+              {passwordVisible ? (
+                <EyeOffIcon
                   className="text-slate-600 cursor-pointer"
                   size={20}
-                /> */}
+                />
+              ) : (
+                <EyeIcon size={20} className="text-slate-600 cursor-pointer" />
+              )}
+            </button>
           </span>
         </div>
       </div>
