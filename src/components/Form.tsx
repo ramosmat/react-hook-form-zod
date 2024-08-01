@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import { EyeIcon } from 'lucide-react';
-import { EyeOffIcon } from 'lucide-react';
+import { EyeIcon, EyeOffIcon } from 'lucide-react';
+import { withMask } from 'use-mask-input';
 
 export default function Form() {
   const [passwordVisible, setPasswordVisible] = useState(false);
@@ -64,15 +64,15 @@ export default function Form() {
       </div>
       <div className="mb-4">
         <label htmlFor="phone">Telefone Celular</label>
-        <input type="text" id="phone" />
+        <input type="text" id="phone" ref={withMask('(99) 99999-9999')} />
       </div>
       <div className="mb-4">
         <label htmlFor="cpf">CPF</label>
-        <input type="text" id="cpf" />
+        <input type="text" id="cpf" ref={withMask('999.999.999-99')} />
       </div>
       <div className="mb-4">
         <label htmlFor="cep">CEP</label>
-        <input type="text" id="cep" />
+        <input type="text" id="cep" ref={withMask('99999-999')} />
       </div>
       <div className="mb-4">
         <label htmlFor="address">Endereço</label>
