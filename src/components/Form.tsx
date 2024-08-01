@@ -2,6 +2,7 @@ import React from 'react';
 import { EyeIcon, EyeOffIcon, Loader } from 'lucide-react';
 import { useHookFormMask } from 'use-mask-input';
 import { FieldValues, useForm } from 'react-hook-form';
+import { ErrorMessage } from '@hookform/error-message';
 
 export default function Form() {
   const [passwordVisible, setPasswordVisible] = React.useState(false);
@@ -65,11 +66,9 @@ export default function Form() {
           })}
         />
         {/* Sugestão de exibição de erro de validação */}
-        {errors.name && (
-          <p className="text-xs text-red-400 mt-1">
-            {errors.name?.message as string}
-          </p>
-        )}
+        <p className="text-xs text-red-400 mt-1">
+          <ErrorMessage errors={errors} name="name" />
+        </p>
       </div>
       <div className="mb-4">
         <label htmlFor="email">E-mail</label>
@@ -85,11 +84,9 @@ export default function Form() {
             },
           })}
         />
-        {errors.email && (
-          <p className="text-xs text-red-400 mt-1">
-            {errors.email?.message as string}
-          </p>
-        )}
+        <p className="text-xs text-red-400 mt-1">
+          <ErrorMessage errors={errors} name="email" />
+        </p>
       </div>
       <div className="mb-4">
         <label htmlFor="password">Senha</label>
@@ -105,11 +102,9 @@ export default function Form() {
               },
             })}
           />
-          {errors.password && (
-            <p className="text-xs text-red-400 mt-1">
-              {errors.password?.message as string}
-            </p>
-          )}
+          <p className="text-xs text-red-400 mt-1">
+            <ErrorMessage errors={errors} name="password" />
+          </p>
           <span className="absolute right-3 top-3">
             <button type="button" onClick={handlePasswordVisibility}>
               {passwordVisible ? (
@@ -138,11 +133,9 @@ export default function Form() {
               },
             })}
           />
-          {errors.password && (
-            <p className="text-xs text-red-400 mt-1">
-              {errors.password?.message as string}
-            </p>
-          )}
+          <p className="text-xs text-red-400 mt-1">
+            <ErrorMessage errors={errors} name="password_confirmation" />
+          </p>
 
           <span className="absolute right-3 top-3">
             <button type="button" onClick={handlePasswordVisibility}>
@@ -171,11 +164,9 @@ export default function Form() {
             },
           })}
         />
-        {errors.phone && (
-          <p className="text-xs text-red-400 mt-1">
-            {errors.phone?.message as string}
-          </p>
-        )}
+        <p className="text-xs text-red-400 mt-1">
+          <ErrorMessage errors={errors} name="phone" />
+        </p>
       </div>
       <div className="mb-4">
         <label htmlFor="cpf">CPF</label>
@@ -190,6 +181,9 @@ export default function Form() {
             },
           })}
         />
+        <p className="text-xs text-red-400 mt-1">
+          <ErrorMessage errors={errors} name="cpf" />
+        </p>
       </div>
       <div className="mb-4">
         <label htmlFor="cep">CEP</label>
@@ -205,6 +199,9 @@ export default function Form() {
             onBlur: handleBlur,
           })}
         />
+        <p className="text-xs text-red-400 mt-1">
+          <ErrorMessage errors={errors} name="zipcode" />
+        </p>
       </div>
       <div className="mb-4">
         <label htmlFor="address">Endereço</label>
@@ -241,16 +238,14 @@ export default function Form() {
           className="text-sm  font-light text-slate-500 mb-1 inline"
           htmlFor="terms"
         >
-          {errors.terms && (
-            <p className="text-xs text-red-400 mt-1">
-              {errors.terms?.message as string}
-            </p>
-          )}
           Aceito os{' '}
           <span className="underline hover:text-slate-900 cursor-pointer">
             termos e condições
           </span>
         </label>
+        <p className="text-xs text-red-400 mt-1">
+          <ErrorMessage errors={errors} name="terms" />
+        </p>
       </div>
 
       <button
