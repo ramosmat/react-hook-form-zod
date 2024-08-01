@@ -1,7 +1,7 @@
 import React from 'react';
 import { EyeIcon, EyeOffIcon, Loader } from 'lucide-react';
-import { withMask } from 'use-mask-input';
-import { useForm } from 'react-hook-form';
+import { useHookFormMask } from 'use-mask-input';
+import { FieldValues, useForm } from 'react-hook-form';
 
 export default function Form() {
   const [passwordVisible, setPasswordVisible] = React.useState(false);
@@ -10,8 +10,10 @@ export default function Form() {
   const {
     handleSubmit,
     register,
-    formState: { isSubmitting },
+    formState: { isSubmitting, errors },
   } = useForm();
+
+  const registerWithMask = useHookFormMask(register);
 
   function handlePasswordVisibility() {
     setPasswordVisible(!passwordVisible);
@@ -30,7 +32,7 @@ export default function Form() {
     }
   }
 
-  async function onSubmit(data: any) {
+  async function onSubmit(data: FieldValues) {
     console.log('Form submitted');
     console.log(data);
 
@@ -51,15 +53,43 @@ export default function Form() {
     <form onSubmit={handleSubmit(onSubmit)}>
       <div className="mb-4">
         <label htmlFor="name">Nome Completo</label>
-        <input type="text" id="name" {...register('name')} />
+        <input
+          type="text"
+          id="name"
+          {...register('name', {
+            required: 'O campo nome precisa ser preenchido',
+            maxLength: {
+              value: 255,
+              message: 'O nome deve ter no máximo 255 caracteres',
+            },
+          })}
+        />
         {/* Sugestão de exibição de erro de validação */}
-        <div className="min-h-4">
-          <p className="text-xs text-red-400 mt-1">O nome é obrigatório.</p>
-        </div>
+        {errors.name && (
+          <p className="text-xs text-red-400 mt-1">
+            {errors.name?.message as string}
+          </p>
+        )}
       </div>
       <div className="mb-4">
         <label htmlFor="email">E-mail</label>
-        <input className="" type="email" id="email" {...register('email')} />
+        <input
+          className=""
+          type="email"
+          id="email"
+          {...register('email', {
+            required: 'O campo email precisa ser preenchido',
+            pattern: {
+              value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i,
+              message: 'E-mail inválido',
+            },
+          })}
+        />
+        {errors.email && (
+          <p className="text-xs text-red-400 mt-1">
+            {errors.email?.message as string}
+          </p>
+        )}
       </div>
       <div className="mb-4">
         <label htmlFor="password">Senha</label>
@@ -67,8 +97,19 @@ export default function Form() {
           <input
             type={passwordVisible ? 'text' : 'password'}
             id="password"
-            {...register('password')}
+            {...register('password', {
+              required: 'O campo senha precisa ser preenchido',
+              minLength: {
+                value: 6,
+                message: 'A senha deve ter no mínimo 6 caracteres',
+              },
+            })}
           />
+          {errors.password && (
+            <p className="text-xs text-red-400 mt-1">
+              {errors.password?.message as string}
+            </p>
+          )}
           <span className="absolute right-3 top-3">
             <button type="button" onClick={handlePasswordVisibility}>
               {passwordVisible ? (
@@ -89,7 +130,20 @@ export default function Form() {
           <input
             type={passwordVisible ? 'text' : 'password'}
             id="confirm-password"
+            {...register('password_confirmation', {
+              required: 'A confirmação de senha precisa ser preenchido',
+              minLength: {
+                value: 6,
+                message: 'A senha deve ter no mínimo 6 caracteres',
+              },
+            })}
           />
+          {errors.password && (
+            <p className="text-xs text-red-400 mt-1">
+              {errors.password?.message as string}
+            </p>
+          )}
+
           <span className="absolute right-3 top-3">
             <button type="button" onClick={handlePasswordVisibility}>
               {passwordVisible ? (
@@ -106,19 +160,50 @@ export default function Form() {
       </div>
       <div className="mb-4">
         <label htmlFor="phone">Telefone Celular</label>
-        <input type="text" id="phone" ref={withMask('(99) 99999-9999')} />
+        <input
+          type="text"
+          id="phone"
+          {...registerWithMask('phone', '(99) 99999-9999', {
+            required: 'O campo telefone precisa ser preenchido',
+            pattern: {
+              value: /^\([0-9]{2}\) [0-9]{5}-[0-9]{4}$/,
+              message: 'Telefone inválido',
+            },
+          })}
+        />
+        {errors.phone && (
+          <p className="text-xs text-red-400 mt-1">
+            {errors.phone?.message as string}
+          </p>
+        )}
       </div>
       <div className="mb-4">
         <label htmlFor="cpf">CPF</label>
-        <input type="text" id="cpf" ref={withMask('999.999.999-99')} />
+        <input
+          type="text"
+          id="cpf"
+          {...registerWithMask('cpf', '999.999.999-99', {
+            required: 'O campo de CPF precisa ser preenchido',
+            pattern: {
+              value: /^\d{3}\.\d{3}\.\d{3}-\d{2}$/,
+              message: 'CPF inválido',
+            },
+          })}
+        />
       </div>
       <div className="mb-4">
         <label htmlFor="cep">CEP</label>
         <input
           type="text"
           id="cep"
-          ref={withMask('99999-999')}
-          onBlur={handleBlur}
+          {...registerWithMask('cep', '99999-999', {
+            required: 'O campo CEP precisa ser preenchido',
+            pattern: {
+              value: /^\d{5}-\d{3}$/,
+              message: 'CEP inválido',
+            },
+            onBlur: handleBlur,
+          })}
         />
       </div>
       <div className="mb-4">
@@ -144,11 +229,23 @@ export default function Form() {
       </div>
       {/* terms and conditions input */}
       <div className="mb-4">
-        <input type="checkbox" id="terms" className="mr-2 accent-slate-500" />
+        <input
+          type="checkbox"
+          id="terms"
+          className="mr-2 accent-slate-500"
+          {...register('terms', {
+            required: 'Os termos e condições devem ser aceitas',
+          })}
+        />
         <label
           className="text-sm  font-light text-slate-500 mb-1 inline"
           htmlFor="terms"
         >
+          {errors.terms && (
+            <p className="text-xs text-red-400 mt-1">
+              {errors.terms?.message as string}
+            </p>
+          )}
           Aceito os{' '}
           <span className="underline hover:text-slate-900 cursor-pointer">
             termos e condições
