@@ -1,10 +1,17 @@
 import React from 'react';
-import { EyeIcon, EyeOffIcon } from 'lucide-react';
+import { EyeIcon, EyeOffIcon, Loader } from 'lucide-react';
 import { withMask } from 'use-mask-input';
+import { useForm } from 'react-hook-form';
 
 export default function Form() {
   const [passwordVisible, setPasswordVisible] = React.useState(false);
   const [adress, setAddress] = React.useState({ city: '', street: '' });
+
+  const {
+    handleSubmit,
+    register,
+    formState: { isSubmitting },
+  } = useForm();
 
   function handlePasswordVisibility() {
     setPasswordVisible(!passwordVisible);
@@ -23,11 +30,28 @@ export default function Form() {
     }
   }
 
+  async function onSubmit(data: any) {
+    console.log('Form submitted');
+    console.log(data);
+
+    const response = await fetch(
+      'https://apis.codante.io/api/register-user/register',
+      { method: 'POST', body: JSON.stringify(data) },
+    );
+    const json = await response.json();
+
+    console.log(response);
+    console.log(json);
+
+    // if (response.ok) {
+    // }
+  }
+
   return (
-    <form>
+    <form onSubmit={handleSubmit(onSubmit)}>
       <div className="mb-4">
         <label htmlFor="name">Nome Completo</label>
-        <input type="text" id="name" />
+        <input type="text" id="name" {...register('name')} />
         {/* Sugestão de exibição de erro de validação */}
         <div className="min-h-4">
           <p className="text-xs text-red-400 mt-1">O nome é obrigatório.</p>
@@ -35,12 +59,16 @@ export default function Form() {
       </div>
       <div className="mb-4">
         <label htmlFor="email">E-mail</label>
-        <input className="" type="email" id="email" />
+        <input className="" type="email" id="email" {...register('email')} />
       </div>
       <div className="mb-4">
         <label htmlFor="password">Senha</label>
         <div className="relative">
-          <input type={passwordVisible ? 'text' : 'password'} id="password" />
+          <input
+            type={passwordVisible ? 'text' : 'password'}
+            id="password"
+            {...register('password')}
+          />
           <span className="absolute right-3 top-3">
             <button type="button" onClick={handlePasswordVisibility}>
               {passwordVisible ? (
@@ -130,9 +158,10 @@ export default function Form() {
 
       <button
         type="submit"
-        className="bg-slate-500 font-semibold text-white w-full rounded-xl p-4 mt-10 hover:bg-slate-600 transition-colors"
+        disabled={isSubmitting}
+        className="bg-slate-500 font-semibold text-white w-full rounded-xl p-4 mt-10 hover:bg-slate-600 transition-colors disabled:bg-slate-300 flex items-center justify-center"
       >
-        Cadastrar
+        {isSubmitting ? <Loader className="animate-spin" /> : 'Cadastrar'}
       </button>
     </form>
   );
