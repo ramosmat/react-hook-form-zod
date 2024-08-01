@@ -11,6 +11,7 @@ export default function Form() {
     handleSubmit,
     register,
     setValue,
+    setError,
     formState: { isSubmitting, errors },
   } = useForm();
 
@@ -46,13 +47,17 @@ export default function Form() {
         body: JSON.stringify(data),
       },
     );
-    const json = await response.json();
 
-    console.log(response);
-    console.log(json);
+    const resData = await response.json();
 
-    // if (response.ok) {
-    // }
+    if (!response.ok) {
+      for (const field in resData.errors) {
+        setError(field, { type: 'manual', message: resData.errors[field] });
+      }
+    } else {
+      console.log(response);
+      console.log(resData);
+    }
   }
 
   return (
