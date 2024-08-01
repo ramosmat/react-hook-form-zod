@@ -6,11 +6,11 @@ import { ErrorMessage } from '@hookform/error-message';
 
 export default function Form() {
   const [passwordVisible, setPasswordVisible] = React.useState(false);
-  const [adress, setAddress] = React.useState({ city: '', street: '' });
 
   const {
     handleSubmit,
     register,
+    setValue,
     formState: { isSubmitting, errors },
   } = useForm();
 
@@ -28,8 +28,10 @@ export default function Form() {
     );
 
     if (response.ok) {
-      const json = await response.json();
-      setAddress({ city: json.city, street: json.street });
+      const data = await response.json();
+      // setAddress({ city: json.city, street: json.street });
+      setValue('address', data.street);
+      setValue('city', data.city);
     }
   }
 
@@ -39,7 +41,11 @@ export default function Form() {
 
     const response = await fetch(
       'https://apis.codante.io/api/register-user/register',
-      { method: 'POST', body: JSON.stringify(data) },
+      {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data),
+      },
     );
     const json = await response.json();
 
@@ -190,7 +196,7 @@ export default function Form() {
         <input
           type="text"
           id="cep"
-          {...registerWithMask('cep', '99999-999', {
+          {...registerWithMask('zipcode', '99999-999', {
             required: 'O campo CEP precisa ser preenchido',
             pattern: {
               value: /^\d{5}-\d{3}$/,
@@ -209,8 +215,8 @@ export default function Form() {
           className="disabled:bg-slate-200"
           type="text"
           id="address"
-          value={adress.street}
           disabled
+          {...register('address')}
         />
       </div>
 
@@ -220,8 +226,8 @@ export default function Form() {
           className="disabled:bg-slate-200"
           type="text"
           id="city"
-          value={adress.city}
           disabled
+          {...register('city')}
         />
       </div>
       {/* terms and conditions input */}
