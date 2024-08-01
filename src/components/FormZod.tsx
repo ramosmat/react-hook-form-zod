@@ -3,8 +3,9 @@ import { EyeIcon, EyeOffIcon, Loader } from 'lucide-react';
 import { useHookFormMask } from 'use-mask-input';
 import { FieldValues, useForm } from 'react-hook-form';
 import { ErrorMessage } from '@hookform/error-message';
+import { zodResolver } from '@hookform/resolvers/zod';
 
-export default function Form() {
+export default function FormZod() {
   const [passwordVisible, setPasswordVisible] = React.useState(false);
 
   const {
@@ -13,7 +14,7 @@ export default function Form() {
     setValue,
     setError,
     formState: { isSubmitting, errors },
-  } = useForm();
+  } = useForm({ resolver: zodResolver({}) });
 
   const registerWithMask = useHookFormMask(register);
 
@@ -227,7 +228,6 @@ export default function Form() {
           {...register('address')}
         />
       </div>
-
       <div className="mb-4">
         <label htmlFor="city">Cidade</label>
         <input
@@ -261,7 +261,6 @@ export default function Form() {
           <ErrorMessage errors={errors} name="terms" />
         </p>
       </div>
-
       <button
         type="submit"
         disabled={isSubmitting}
