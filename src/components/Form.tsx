@@ -37,7 +37,6 @@ export default function Form() {
 
   async function onSubmit(data: FieldValues) {
     console.log('Form submitted');
-    console.log(data);
 
     const response = await fetch(
       'https://apis.codante.io/api/register-user/register',
@@ -103,8 +102,8 @@ export default function Form() {
             {...register('password', {
               required: 'O campo senha precisa ser preenchido',
               minLength: {
-                value: 6,
-                message: 'A senha deve ter no mínimo 6 caracteres',
+                value: 8,
+                message: 'A senha deve ter no mínimo 8 caracteres',
               },
             })}
           />
@@ -134,8 +133,12 @@ export default function Form() {
             {...register('password_confirmation', {
               required: 'A confirmação de senha precisa ser preenchido',
               minLength: {
-                value: 6,
-                message: 'A senha deve ter no mínimo 6 caracteres',
+                value: 8,
+                message: 'A senha deve ter no mínimo 8 caracteres',
+              },
+              validate: (value, formValues) => {
+                if (value === formValues.password) return true;
+                return 'As senhas devem ser iguais';
               },
             })}
           />
